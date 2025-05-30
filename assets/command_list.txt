@@ -1,0 +1,11 @@
+=====================
+LIST OF COMMANDS
+- add: add (track) a vehicle
+- clear: clear terminal screen
+- delete: delete (untrack) a vehicle
+- exit: exit the program
+- list: show all current tracked vehicles
+- help: print this list
+- search: search for a tracked vehicle, based on bien_so or mssv
+USAGE: enter command name first, parameters (if any) later
+=====================
