@@ -1,8 +1,10 @@
 import dbModule as dbm
 import os
+from pathlib import Path
 
-DATA_PATH = 'assets/xe.csv'
-HELP_PATH = 'assets/command_list.txt'
+BASE_DIR = Path(__file__).resolve().parents[1]
+DATA_PATH = BASE_DIR / 'assets' / 'xe.csv'
+HELP_PATH = BASE_DIR / 'assets' / 'command_list.txt'
 
 class UserInterface:
     def __init__(self):
@@ -43,8 +45,19 @@ class UserInterface:
             args[i] = inp
         self.dbo.add_entry(args[0], args[1], args[2], args[3], args[4])
         print("Vehicle added!")
-    def delete_handler(self):
-        print("'delete' is being developed")
+    def delete_handler(self) -> None:
+        '''
+        this method handle the delete vehicle by mssv or the bien so from the user
+        Returns:
+            None
+        '''
+        user_input = input('Enter mssv or bien so: ')
+        if(len(user_input) == 6):
+            result = self.dbo.remove_vehicle(user_input, 1)
+        else:
+            result = self.dbo.remove_vehicle(user_input, 0)
+        
+        print('Delete successfully')
 
         
     def search_handler(self):
