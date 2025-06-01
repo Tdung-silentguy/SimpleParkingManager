@@ -15,12 +15,12 @@ def addMonth(arr):
     Returns:
         list 
     '''
-    num = int(arr[1])
-    num += 1
-    if num > 12:
-        arr[1] = '01'
-        arr[2] += 1
-    arr[1] = f"{num:02d}"
+    # regenerate date time from arr
+    date = '/'.join(arr)
+    date = datetime.strptime(date, "%d/%m/%Y")
+    new_date = date + relativedelta(months=1)
+    new_date = new_date.strftime("%d/%m/%Y")
+    arr = str(new_date).split('/')
     return arr
 
 class DBObject:
@@ -31,7 +31,12 @@ class DBObject:
         self.con.register("my_table", self.data)
         
     def reload_data(self):
+        '''
+        reload file and connection to duckdb
+        '''
+        self.con.unregister("my_table")
         self.data = pd.read_csv(self.path)
+        self.con.register("my_table", self.data)
         
     def print_table(self):
         print(self.data.to_string())
@@ -58,26 +63,25 @@ class DBObject:
         df = self.con.execute("SELECT * FROM my_table WHERE so_the=?", [key]).fetchdf()
         return not(df.empty)
     
-    def extend(self, key):
-        # key is ensured to be in the table
-
-        '''df = self.con.execute("SELECT * FROM my_table").fetchdf()
-        idxList = df.index[df['so_the'] == key].tolist()
-        row = idxList[0]'''
-        df = self.con.execute("SELECT * FROM my_table WHERE so_the=?", [key]).fetchdf() # this will select the vehicle
-        row = df.index[0]
-
-        endDate = df.at[0, "ket_thuc"] # ket_thuc is 4th column
-        arr = str(endDate).split('/') # the ket_thuc format is dd//mm/yyyy with( arr[0] is day, arr[1] is month, arr[2] is year)
+    def extend(self, card_id: str):
+        '''
+        this method extend expired day of selected vehicle via card id
+        '''
         
-        # for profit's sake, we only add 1 to the month, not 30 days
-        '''if arr[0] <= 28:
-            arr = addMonth(arr)
-        elif arr[1]=='''
-        arr = addMonth(arr)
-        newEndDate = '/'.join(arr)
-        self.data.loc[row, "ket_thuc"] = newEndDate
-        self.data.to_csv(self.path, index=False)
+        # check valid argument
+        df = self.con.execute("SELECT * FROM my_table WHERE so_the=?", [card_id]).fetchdf() # this will select the vehicle
+        if df.empty:
+            raise ValueError('this card number doesn\'t exist')
+        
+        expire_date = df['ket_thuc'][0] #get the first row because card_id is unique
+        expire_date = datetime.strptime(expire_date, '%d/%m/%Y')
+        
+        expire_date = expire_date + relativedelta(months=1)
+        expire_date = datetime.strftime(expire_date, '%d/%m/%Y')
+        self.data.loc[self.data['so_the'] ==  int(card_id), 'ket_thuc'] = expire_date # due to type of card_id is str it need to 
+        # convert to int before compare with value in data['so_the']
+    
+        self.data.to_csv(self.path, index= False)
         self.reload_data()
     
     def remove_vehicle(self, key, mode = 0):
