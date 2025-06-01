@@ -13,6 +13,7 @@ class UserInterface:
         
     def greet(self):
         print("SPM: SIMPLE PARKING MANAGER version 0.1 Alpha\nAuthor: tdung")
+        print("type \'help\' to see all available command and usage")
 
 # UTILITIES
     def enoughArgs(self, len, expected):
@@ -45,7 +46,9 @@ class UserInterface:
 
     def list_handler(self):
         self.dbo.print_table()
+        
     def clear_handler(self):
+        
         os.system('cls' if os.name == 'nt' else 'clear')
     def add_handler(self):
         #l = len(args)
@@ -60,6 +63,7 @@ class UserInterface:
             args[i] = inp
         self.dbo.add_entry(args[0], args[1], args[2], args[3], args[4])
         print("Vehicle added!")
+        
     def delete_handler(self) -> None:
         '''
         this method handle the delete vehicle by mssv or the bien so from the user
@@ -76,6 +80,11 @@ class UserInterface:
 
         
     def search_handler(self):
+        '''
+        This method handle search vehicle queries
+        Returns:
+        None
+        '''
         arg = str(input(">>>>>> Enter bien_so or mssv: "))
         result = None
         if len(arg) == 6:
@@ -83,7 +92,12 @@ class UserInterface:
         else:
             result = self.dbo.lookup_entry(arg, 0)
         print(result)
+        
     def extend_handler(self):
+        '''
+        this method handle extend the expired date of registerd vehicle
+        Returns:
+        None'''
         arg = str(input(">>>>>> Enter so_the: "))
         if self.dbo.contains(arg):
             self.dbo.extend(arg)
