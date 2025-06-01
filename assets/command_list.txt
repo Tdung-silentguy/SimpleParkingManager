@@ -7,5 +7,6 @@ LIST OF COMMANDS
 - list: show all current tracked vehicles
 - help: print this list
 - search: search for a tracked vehicle, based on bien_so or mssv
+- extend: extend 1 months to the selected vehicles
 USAGE: enter command name first, parameters (if any) later
 =====================
