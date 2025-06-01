@@ -14,6 +14,21 @@ class UserInterface:
     def greet(self):
         print("SPM: SIMPLE PARKING MANAGER version 0.1 Alpha\nAuthor: tdung")
 
+# UTILITIES
+    def enoughArgs(self, len, expected):
+        if len == expected:
+            return True
+        if len < expected:
+            print("Missing arguments! Enter 'help' for list of commands, 'exit' for exit")
+        else:
+            print("Redundant arguments! Enter 'help' for list of commands, 'exit' for exit")
+        return False
+    def raiseError(self, err):
+        print("ERROR:", err)
+    def is_legit_input(self, n, inp):
+        return True
+
+
 # COMMAND HANDLERS
     def help_handler(self):
         print("'help' is being developed")
@@ -57,7 +72,7 @@ class UserInterface:
         else:
             result = self.dbo.remove_vehicle(user_input, 0)
         
-        print('Delete successfully')
+        print('Vehicle removed successfully!')
 
         
     def search_handler(self):
@@ -79,17 +94,7 @@ class UserInterface:
 
         
 
-# UTILITIES
-    def enoughArgs(self, len, expected):
-        if len == expected:
-            return True
-        if len < expected:
-            print("Missing arguments! Enter 'help' for list of commands, 'exit' for exit")
-        else:
-            print("Redundant arguments! Enter 'help' for list of commands, 'exit' for exit")
-        return False
-    def raiseError(self, err):
-        print("ERROR:", err)
+
 # RUN INTERFACE
 
     def run_interface(self):
@@ -116,6 +121,9 @@ class UserInterface:
                     self.search_handler()
                 case 'extend':
                     self.extend_handler()
+                # synonymous commands
+                case 'remove':
+                    self.delete_handler()
                 case _:
                     self.invalid_handler()
 

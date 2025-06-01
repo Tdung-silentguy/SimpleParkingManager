@@ -2,7 +2,7 @@
 LIST OF COMMANDS
 - add: add (track) a vehicle
 - clear: clear terminal screen
-- delete: delete (untrack) a vehicle
+- delete (remove): delete (untrack) a vehicle
 - exit: exit the program
 - list: show all current tracked vehicles
 - help: print this list
