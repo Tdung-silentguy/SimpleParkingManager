@@ -59,6 +59,32 @@ class DBObject:
         newEndDate = '/'.join(arr)
         self.data.loc[row, "ket_thuc"] = newEndDate
         self.data.to_csv(self.path, index=False)
+    
+    def remove_vehicle(self, key, mode = 0):
+        '''
+        this function will untracking the selected vehicle in the parking
+        Params:
+            key: the selected key to deleted
+            mode:
+                if mode = 0 it will select by the 'bien_so' \n
+                if mode = 1 it will select by mssv
+        Returns:
+            None
+        '''
+        if(mode == 0):      
+            # check existance
+            df = self.con.execute("SELECT * FROM my_table WHERE bien_so=?", [key]).fetchdf()
+            if df.empty:
+                raise ValueError('key does not exist ')
+            self.data = self.data[self.data['bien_so'] != key]
+        elif (mode == 1):
+            df = self.con.execute("SELECT * FROM my_table WHERE mssv=?", [key]).fetchdf()
+            if df.empty:
+                raise ValueError('key does not exist ')
+            self.data = self.data[self.data['mssv'] != key]
+        else:
+            raise ValueError('invalid mode')
+        self.data.to_csv(self.path, index=False)
         
 '''# testSE
 DATA_PATH = 'assets/xe.csv'
